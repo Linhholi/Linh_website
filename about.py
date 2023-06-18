@@ -3,8 +3,8 @@ import pandas as pd
 
 
 def about_page():
-    with open('style.css') as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+#     with open('style.css') as f:
+#         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
     st.subheader("Personal statement")
     st.write("Data holds layers of meaning that can be used to drive business improvements, which is what makes the field so fascinating to me. This is what motivated me to choose data science as my major. The thrill of discovering innovative solutions and seeing the positive impact of my work is what drives me to pursue a career in this exciting industry.")
     col1, col2 = st.columns(2)
