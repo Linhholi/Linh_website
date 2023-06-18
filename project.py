@@ -64,41 +64,41 @@ def project_page1():
     st.write(table_data.to_html(index=False,escape=False), unsafe_allow_html=True)
 
 def project_page2():
-    # Load the pre-trained emotion detection model
-    model = load_model('model.h5')
+    # # Load the pre-trained emotion detection model
+    # model = load_model('model.h5')
 
-    # Define the emotion labels
-    emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
+    # # Define the emotion labels
+    # emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
-    # Initialize the webcam
-    cap = cv2.VideoCapture(0)
+    # # Initialize the webcam
+    # cap = cv2.VideoCapture(0)
 
-    while True:
-        # Read a frame from the webcam
-        ret, frame = cap.read()
+    # while True:
+    #     # Read a frame from the webcam
+    #     ret, frame = cap.read()
 
-        # Preprocess the frame for emotion detection
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        resized = cv2.resize(gray, (48, 48))
-        normalized = resized / 255.0
-        reshaped = np.reshape(normalized, (1, 48, 48, 1))
+    #     # Preprocess the frame for emotion detection
+    #     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    #     resized = cv2.resize(gray, (48, 48))
+    #     normalized = resized / 255.0
+    #     reshaped = np.reshape(normalized, (1, 48, 48, 1))
 
-        # Perform emotion prediction
-        result = model.predict(reshaped)
-        emotion_index = np.argmax(result)
-        emotion = emotion_labels[emotion_index]
+    #     # Perform emotion prediction
+    #     result = model.predict(reshaped)
+    #     emotion_index = np.argmax(result)
+    #     emotion = emotion_labels[emotion_index]
 
-        # Display the emotion prediction on the frame
-        cv2.putText(frame, emotion, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-        cv2.imshow('Emotion Detection', frame)
+    #     # Display the emotion prediction on the frame
+    #     cv2.putText(frame, emotion, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+    #     cv2.imshow('Emotion Detection', frame)
 
-        # Exit the loop if 'q' is pressed
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+    #     # Exit the loop if 'q' is pressed
+    #     if cv2.waitKey(1) & 0xFF == ord('q'):
+    #         break
 
-    # Release the webcam and close all windows
-    cap.release()
-    cv2.destroyAllWindows()
+    # # Release the webcam and close all windows
+    # cap.release()
+    # cv2.destroyAllWindows()
     st.write("Here")
     
 
