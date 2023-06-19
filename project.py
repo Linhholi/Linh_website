@@ -1,10 +1,16 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-# import cv2
-# import tensorflow as tf
-# from tensorflow.keras.models import load_model
-# import numpy as np
+import numpy as np
+from PIL import Image
+import io
+import os
+import torch
+import torchvision.transforms as transforms
+import wget
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 def project_page1():
     st.title("The Superheroes Project")
@@ -63,55 +69,69 @@ def project_page1():
 
     st.write(table_data.to_html(index=False,escape=False), unsafe_allow_html=True)
 
+
 def project_page2():
-    # # Load the pre-trained emotion detection model
-    # model = load_model('model.h5')
 
-    # # Define the emotion labels
-    # emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
+    def load_model():
+        model = torch.hub.load('pytorch/vision:v0.10.0', 'resnet18', pretrained=True)
+        model.eval()
+        return model
 
-    # # Initialize the webcam
-    # cap = cv2.VideoCapture(0)
+    def load_labels():
+        labels_path = 'https://raw.githubusercontent.com/pytorch/hub/master/imagenet_classes.txt'
+        labels_file = os.path.basename(labels_path)
+        if not os.path.exists(labels_file):
+            wget.download(labels_path)
+        with open(labels_file, "r") as f:
+            categories = [s.strip() for s in f.readlines()]
+            return categories
+        
+    def predict(model, categories, image):
+        preprocess = transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ])
+        input_tensor = preprocess(image)
+        input_batch = input_tensor.unsqueeze(0)
 
-    # while True:
-    #     # Read a frame from the webcam
-    #     ret, frame = cap.read()
+        with torch.no_grad():
+            output = model(input_batch)
 
-    #     # Preprocess the frame for emotion detection
-    #     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    #     resized = cv2.resize(gray, (48, 48))
-    #     normalized = resized / 255.0
-    #     reshaped = np.reshape(normalized, (1, 48, 48, 1))
+        probabilities = torch.nn.functional.softmax(output[0], dim=0)
 
-    #     # Perform emotion prediction
-    #     result = model.predict(reshaped)
-    #     emotion_index = np.argmax(result)
-    #     emotion = emotion_labels[emotion_index]
+        top5_prob, top5_catid = torch.topk(probabilities, 5)
+        for i in range(top5_prob.size(0)):
+            st.write(categories[top5_catid[i]], top5_prob[i].item())
 
-    #     # Display the emotion prediction on the frame
-    #     cv2.putText(frame, emotion, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-    #     cv2.imshow('Emotion Detection', frame)
-
-    #     # Exit the loop if 'q' is pressed
-    #     if cv2.waitKey(1) & 0xFF == ord('q'):
-    #         break
-
-    # # Release the webcam and close all windows
-    # cap.release()
-    # cv2.destroyAllWindows()
-    st.write("Here")
+    st.markdown(""" 
+    #### The predictions based on pre-trained model resnet18 by Pytorch with classes getting from: 
+    https://raw.githubusercontent.com/pytorch/hub/master/imagenet_classes.txt
     
-
+    """)
+    uploaded_file = st.file_uploader(label='Upload an image')
+   
+    if uploaded_file is not None:
+        image_data = uploaded_file.getvalue()
+        st.image(image_data)
+        image = Image.open(io.BytesIO(image_data))
+        model = load_model()
+        categories = load_labels()
+        result = st.button('Run prediction on the image')
+        if result:
+            st.write('Results:')
+            predict(model, categories, image)
 
 
 def project_page():
     st.title("Project Selection")
-    project_options = ["Select a project"] + ["The Superheroes Project", "Detect Emotions"]  # Add more project options as needed
+    project_options = ["Select a project"] + ["The Superheroes Project", "The Image Predictions"]  # Add more project options as needed
     selected_project = st.selectbox("",project_options)
 
     if selected_project == "The Superheroes Project":
         project_page1()
-    elif selected_project == "Detect Emotions":
+    elif selected_project == "The Image Predictions":
         project_page2()
 
 if __name__ == "__main__":

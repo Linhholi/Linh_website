@@ -3,7 +3,12 @@
 # from bs4 import BeautifulSoup
 # from datetime import datetime
 # import re
-import geopandas as gpd
+# import geopandas as gpd
+import tensorflow as tf
+
+model = tf.keras.models.load_model("cnn_model_3.h5")
+# Display the model summary
+model.summary()
 
 
 
@@ -49,19 +54,19 @@ import geopandas as gpd
 # # # Save the updated dataset back to the same file
 # data.to_csv("data.csv", index=False)
 
-import geopandas as gpd
+# import geopandas as gpd
 
-# Read the shapefile using geopandas
-shapefile_path = 'shapefile/SA2_2021_AUST_GDA2020.shp'
-gdf = gpd.read_file(shapefile_path)
+# # Read the shapefile using geopandas
+# shapefile_path = 'shapefile/SA2_2021_AUST_GDA2020.shp'
+# gdf = gpd.read_file(shapefile_path)
 
-# Filter the GeoDataFrame based on the value of STE_NAME21
-filtered_gdf = gdf[gdf['STE_NAME21'] == 'Victoria']
+# # Filter the GeoDataFrame based on the value of STE_NAME21
+# filtered_gdf = gdf[gdf['STE_NAME21'] == 'Victoria']
 
-# Select only the desired columns
-selected_columns = ['SA2_NAME21', 'STE_NAME21', 'geometry']
-df = filtered_gdf[selected_columns]
+# # Select only the desired columns
+# selected_columns = ['SA2_NAME21', 'STE_NAME21', 'geometry']
+# df = filtered_gdf[selected_columns]
 
-# Save the DataFrame to a CSV file
-csv_path = 'geo.csv'
-df.to_csv(csv_path, index=False)
+# # Save the DataFrame to a CSV file
+# csv_path = 'geo.csv'
+# df.to_csv(csv_path, index=False)
