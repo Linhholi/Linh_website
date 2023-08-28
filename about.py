@@ -11,7 +11,7 @@ def about_page():
     col1.subheader("Education")
     # Define the table data
     table_edu = [
-        ['<b>Master of Data Science</b><br>Swinburne University of Technology','<br>Distinction average 87.5% <br> Current GPA: 3.125 '],
+        ['<b>Master of Data Science</b><br>Swinburne University of Technology','<br>Distinction average 91.67% <br> Current GPA: 3.25 '],
         ['<b>Bachelor of Finance and Banking</b><br>Foreign Trade University','<br> GPA: 3.23']
     ]
      # Convert table_data to a DataFrame
